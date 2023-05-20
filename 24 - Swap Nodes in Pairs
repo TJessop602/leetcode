@@ -1,0 +1,15 @@
+struct ListNode* swapPairs(struct ListNode* head){
+    
+    struct ListNode newHead = {.val = 0, .next = head};
+    struct ListNode *first = &newHead, *second = head;
+    
+    while(second && second->next){                                        
+        first->next = second->next;          
+        second->next = second->next->next;   
+        first->next->next = second;          
+        
+        second = second->next;
+        first = first->next->next;
+    }
+    return newHead.next;
+}
