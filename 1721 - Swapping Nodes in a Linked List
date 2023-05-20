@@ -1,0 +1,24 @@
+//The hint for this one says we should transform the
+//linked list into an array. The hint is wrong. Also
+//for some reason the list is 1-indexed.
+
+struct ListNode* swapNodes(struct ListNode* head, int k){
+
+    struct ListNode *left = head, *right = head, *end = head;
+
+    while(k-- > 1){           //after this, left and end are k-1 steps into the list
+        left = left->next;
+        end = end->next;
+    }
+
+    while(end->next){         //after this right will be k-1 steps from the end 
+        right = right->next;
+        end = end->next;
+    }
+    
+    int temp = left->val;     //now we can just swap them, having traversed the list once.
+    left->val = right->val;
+    right->val = temp;
+    
+    return head;
+}
