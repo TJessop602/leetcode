@@ -1,0 +1,23 @@
+//Just count the nodes with no incoming edges
+
+int* findSmallestSetOfVertices(int n, int** edges, int edgesSize, int* edgesColSize, int* returnSize){
+
+    int count = 0;
+    int* hasIncoming = calloc(n,sizeof(int));
+
+    for(int i = 0; i < edgesSize; i++){
+        hasIncoming[edges[i][1]]++;
+    }
+
+    int* ret = calloc(n,sizeof(int));
+
+    for(int i = 0; i < n; i++){
+        if(hasIncoming[i] == 0){
+            ret[count++] = i;
+        }
+    }
+
+    free(hasIncoming);
+    *returnSize = count;
+    return ret;
+}
