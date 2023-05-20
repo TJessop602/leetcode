@@ -1,0 +1,41 @@
+//Find the middle of the list, reverse the second half then run through
+//the two halves of the list looking for the largest pair.
+
+struct ListNode* findLinkedListMiddle(struct ListNode* head){
+
+    struct ListNode *slow = head, *fast = head;
+
+    while(fast && fast->next){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
+
+struct ListNode* reverseLinkedList(struct ListNode* head){
+
+    struct ListNode *prev = NULL, *cur = head, *next = NULL;
+
+    while(cur){
+        next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    return prev;
+}
+
+int pairSum(struct ListNode* head){
+
+    struct ListNode* middle = findLinkedListMiddle(head);
+    middle = reverseLinkedList(middle);
+    int maxSum = 0;
+    
+    while(middle){
+        int sum = head->val + middle->val;
+        maxSum = sum > maxSum ? sum : maxSum;
+        head = head->next;
+        middle = middle->next; 
+    }
+    return maxSum;
+}
