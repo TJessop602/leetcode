@@ -1,0 +1,45 @@
+#I had to look at other people's solutions for this one, I had
+#a similar solution (DFS to find an island, BFS to grow it until
+#it hits the other island) but there was some bug in it causing it to
+#time out and the code was such a mess as to make debugging it
+#more of a pain than finding out if there was a cleaner way to
+#do it. Turns out, yes. Yes there was.
+
+class Solution:
+    def shortestBridge(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        x, y = next((i, j) for i in range(m) for j in range(n) if grid[i][j])   #neat trick
+        
+        stack = [(x,y)]
+        seen = set()
+        while stack:
+
+            x, y = stack.pop()
+            seen.add((x,y))
+            for dx, dy in [(0,1),(0,-1),(1,0),(-1,0)]:
+
+                if (0 <= x+dx < m and 0 <= y+dy < n and 
+                    grid[x+dx][y+dy] == 1 and (x+dx,y+dy) not in seen):
+
+                    stack.append((x+dx,y+dy))
+                    seen.add((x+dx,y+dy))
+        
+        distance = 0
+        q = list(seen)
+        while q:                                               #I always forget that you can cycle arrays 
+                                                               #to make a makeshift queue.
+            nextQ = []
+            for x, y in q:
+                for dx, dy in [(0,1),(0,-1),(1,0),(-1,0)]:
+                    
+                    if (0 <= x+dx < m and 0 <= y+dy < n and
+                        (x+dx,y+dy) not in seen):
+                        
+                        if grid[x+dx][y+dy] == 1:
+                            return distance
+                            
+                        nextQ.append((x+dx,y+dy))
+                        seen.add((x+dx,y+dy))
+            q = nextQ
+            distance += 1
+        return -1
