@@ -1,0 +1,18 @@
+class Solution:
+    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:   
+        if grid[0][0] == 1:
+            return -1
+        n = len(grid)
+        q = deque()
+        seen = set()
+        q.append((0,0,1))
+        while q:
+            x, y, step = q.popleft()
+            if x == n-1 and y == n-1:
+                return step
+            seen.add((x,y))
+            for dx,dy in [(0,1),(0,-1),(1,0),(-1,0),(1,1),(-1,-1),(-1,1),(1,-1)]:
+                if 0 <= x+dx < n and 0 <= y+dy < n and (x+dx,y+dy) not in seen and grid[x+dx][y+dy] == 0:
+                    seen.add((x+dx,y+dy))
+                    q.append((x+dx,y+dy,step+1))
+        return -1
