@@ -1,0 +1,14 @@
+#One of the most poorly worded problems on the site and with completely worthless examples and testcases.
+#Really, it's more or less just asking for the max height of a graph + some fluff.
+
+class Solution:
+    def numOfMinutes(self, n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
+        
+        graph = defaultdict(list)
+        for i, m in enumerate(manager):
+            graph[m].append(i)
+
+        def dfs(node):
+            return max([dfs(child) for child in graph[node]]+[0]) + informTime[node]
+
+        return dfs(headID)
