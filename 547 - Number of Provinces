@@ -1,0 +1,17 @@
+class Solution:
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        seen = set()
+        stack = []
+        count = 0
+        for i in range(len(isConnected)):
+            if i not in seen:
+                stack.append(i)
+                seen.add(i)
+                while stack:
+                    cur = stack.pop()
+                    for j in range(len(isConnected[cur])):
+                        if isConnected[cur][j] == 1 and j not in seen:
+                            stack.append(j)
+                            seen.add(j)
+                count += 1
+        return count
