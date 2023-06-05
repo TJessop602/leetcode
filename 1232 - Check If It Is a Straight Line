@@ -1,0 +1,17 @@
+class Solution:
+    def checkStraightLine(self, coordinates: List[List[int]]) -> bool:
+
+        def getSlope(a, b):
+            return inf if b[0] == a[0] else (b[1]-a[1])//(b[0]-a[0])
+        
+        if len(coordinates) == 2:
+            return True
+            
+        prevSlope = getSlope(coordinates[1], coordinates[0])
+
+        for i in range(2, len(coordinates)):
+            slope = getSlope(coordinates[i], coordinates[i-1])
+            if slope != prevSlope:
+                return False
+            prevSlope = slope
+        return True
