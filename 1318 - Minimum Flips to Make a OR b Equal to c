@@ -1,0 +1,22 @@
+int minFlips(int a, int b, int c)
+{
+    int flips = 0;
+    int aBit, bBit, cBit;
+
+    for(int i = 0; i < 31; i++)
+    {
+        aBit = (a & (1 << i)) >> i;
+        bBit = (b & (1 << i)) >> i;
+        cBit = (c & (1 << i)) >> i;
+        
+        if(cBit)
+        {
+            flips += (aBit == 0) & (bBit == 0);
+        }
+        else
+        {
+            flips += (aBit != 0) + (bBit != 0);
+        }
+    }
+    return flips;
+}
