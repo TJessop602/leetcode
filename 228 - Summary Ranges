@@ -1,0 +1,52 @@
+/*
+If the length of nums is zero, just return an empty array, otherwise: 
+
+idx     0 1 2 3 4 
+        ---------      if the difference between nums[end-1] and nums[end] is 
+pts     s e            no more than one, move end along one
+arr     1 2 4 5 7      
+
+        s   e          if the difference is greater, write the range between 
+        1 2 4 5 7      nums[start] and nums[end-1] (inclusive) to the output array ("1->2")
+          
+            s e        then move start to where end was and move end along one
+        1 2 4 5 7      and repeat until end is outside the bounds of the nums array
+
+            s   e      ("1->2", "4->5")
+        1 2 4 5 7
+
+                s e    now write the range between nums[start] and nums[end-1] one last
+        1 2 4 5 7      time and return the answer. ("1->2", "4->5", "7")
+
+*/
+#define MAXSTRLEN 25    //the longest string we could need to write is 24 chars 
+                        //long (e.g."–2147483648->-2147483645") plus 1 for null 
+                        //terminator.
+
+void buildString(char buffer[MAXSTRLEN], int start, int end){
+    if(start != end){
+        snprintf(buffer, MAXSTRLEN, "%d->%d", start, end); 
+    }else{
+        snprintf(buffer, MAXSTRLEN, "%d", start);
+    }  
+}
+
+char ** summaryRanges(int* nums, int numsSize, int* returnSize){
+    *returnSize = 0;
+    char** out = calloc(numsSize,sizeof(char*));  //at worst our output array will be 
+    for(int i = 0; i < numsSize; i++){            //as long as our input array
+        out[i] = calloc(MAXSTRLEN,sizeof(char));
+    }
+
+    if(numsSize > 0){
+        int start = 0, end = 1;
+        for(; end < numsSize; end++){
+            if(nums[end] > nums[end-1]+1){
+                buildString(out[(*returnSize)++], nums[start], nums[end-1]);
+                start = end;
+            }
+        }
+        buildString(out[(*returnSize)++], nums[start], nums[end-1]);
+    }
+    return out;
+}
