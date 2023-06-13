@@ -1,0 +1,83 @@
+#define SIZE 200
+
+typedef struct Trie{
+    unsigned int value;
+    unsigned int count;
+    struct Trie* children[SIZE];
+} Trie;
+
+unsigned int hash(unsigned int value){
+    return (value*13337)%4294967295;
+}
+
+void transpose(int** matrix, size_t size){
+    for(int i = 0; i < size; i++){
+        for(int j = i; j < size; j++){
+            int temp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = temp;
+        }
+    }
+}
+
+Trie* trieCreate() {
+    Trie* newNode = calloc(1,sizeof(Trie));
+    return newNode;
+}
+
+void trieInsert(Trie* obj, unsigned int* arr, size_t size) {
+    for(int i = 0; i < size; i++){
+        int offset = 1;
+        int idx = (hash(arr[i])*offset*offset)%SIZE;
+        while(obj->children[idx] != NULL && obj->children[idx]->value != arr[i]){
+            offset++;
+            idx = (hash(arr[i])*offset*offset)%SIZE;
+        }
+        if(obj->children[idx] == NULL){
+            obj->children[idx] = trieCreate();
+            obj->children[idx]->value = arr[i];
+        }
+        obj = obj->children[idx];
+    }
+    obj->count++;
+}
+
+int trieSearch(Trie* obj, unsigned int* arr, size_t size) {
+    for(int i = 0; i < size; i++){
+        int offset = 1;
+        int idx = (hash(arr[i])*offset*offset)%SIZE;
+        while(obj->children[idx] && obj->children[idx]->value != arr[i]){
+            offset++;
+            idx = (hash(arr[i])*offset*offset)%SIZE;
+        }
+        if(obj->children[idx] == NULL){
+            return 0;
+        }
+        obj = obj->children[idx];
+    }
+    return obj->count;
+}
+
+void trieFree(Trie* obj) {
+    if(!obj){
+        return;
+    }
+    for(int i = 0; i < SIZE; i++){
+        trieFree(obj->children[i]);
+    }
+    free(obj);
+}
+
+int equalPairs(int** grid, int gridSize, int* gridColSize){
+    int count = 0;
+    Trie* trie = trieCreate();
+    for(int i = 0; i < gridSize; i++){
+        trieInsert(trie, grid[i], gridSize);
+    }
+    transpose(grid, gridSize);
+    for(int i = 0; i < gridSize; i++){
+        count += trieSearch(trie, grid[i], gridSize);
+    }
+//    trieFree(trie);
+    return count;
+}
