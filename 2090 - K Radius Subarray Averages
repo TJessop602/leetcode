@@ -1,0 +1,20 @@
+int* getAverages(int* nums, int numsSize, int k, int* returnSize){
+    
+    long sum = 0;
+    *returnSize = numsSize;
+    int* ret = calloc(numsSize,sizeof(int));
+
+    for(int i = 0; i < numsSize; i++){
+        ret[i] = -1;
+        if(i >= 2*k+1){
+            ret[i-k-1] = sum/(2*k+1);
+            sum -= nums[i-(2*k+1)];         
+        }
+        sum += nums[i];
+    }
+    if(2*k < numsSize){
+        ret[numsSize-k-1] = sum/(2*k+1);
+    }
+
+    return ret;
+}
