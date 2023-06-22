@@ -1,0 +1,12 @@
+#define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
+
+int maxProfit(int* prices, int pricesSize, int fee){
+    int sellProfit = 0;
+    int buyProfit = -prices[0];
+    
+    for(int i = 1; i < pricesSize; i++){
+        sellProfit = MAX(buyProfit+prices[i]-fee, sellProfit);  //sell vs do nothing
+        buyProfit = MAX(sellProfit-prices[i], buyProfit);  //buy vs do nothing
+    }
+    return sellProfit;   
+}
