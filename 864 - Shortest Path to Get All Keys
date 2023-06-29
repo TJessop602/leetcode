@@ -1,0 +1,33 @@
+class Solution:
+    def shortestPathAllKeys(self, grid: List[str]) -> int:
+
+        keycount = 0
+        sX = 0
+        sY = 0
+
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j].islower():
+                    keycount += 1
+                elif grid[i][j] == '@':
+                    sX = i
+                    sY = j
+
+        q = deque()
+        seen = set()
+        q.append((sX,sY,'',0))
+        while q:
+            x, y, keystate, steps = q.popleft()
+            if len(keystate) == keycount:
+                return steps
+            for dx,dy in [(0,1),(0,-1),(1,0),(-1,0)]:
+                if 0 <= x+dx < len(grid) and 0 <= y+dy < len(grid[0]) and (x+dx,y+dy,keystate) not in seen:
+                    nextMove = grid[x+dx][y+dy]
+                    nextKeystate = keystate
+                    if nextMove == '#' or (nextMove.isupper() and nextMove.lower() not in keystate):
+                        continue
+                    if nextMove.islower() and nextMove not in keystate:
+                        nextKeystate += nextMove
+                    seen.add((x+dx,y+dy,nextKeystate))
+                    q.append((x+dx,y+dy,nextKeystate,steps+1))
+        return -1
