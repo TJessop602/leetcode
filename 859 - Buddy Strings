@@ -1,0 +1,33 @@
+bool buddyStrings(char * s, char * goal){
+
+    int seenLetter = 0;
+    char strChar = '\0';
+    char goalChar = '\0';
+    int differences = 0;
+    bool haveDouble = false;
+
+    while(*s && *goal){
+        if(*s != *goal){
+            switch (++differences){
+                case 1:
+                    strChar = *s;
+                    goalChar = *goal;
+                    break;  
+                case 2:
+                    if(strChar != *goal || goalChar != *s){
+                        return false;
+                    }
+                    break;   
+                case 3:
+                    return false;
+            }
+        }else if(seenLetter & 1 << ((*s)-'a')){
+            haveDouble = true;
+        }else{
+            seenLetter |= 1 << ((*s)-'a');
+        }
+        s++;
+        goal++;
+    }
+    return !*s && !*goal && (differences == 2 || (differences == 0 && haveDouble));
+}
