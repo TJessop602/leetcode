@@ -1,0 +1,28 @@
+double arrivalTime(int* dist, int distSize, int speed){
+    double ret = 0.0;
+    for(int i = 0; i < distSize-1; i++){
+        ret += ceil(dist[i]/(double)speed);
+    }
+    ret += dist[distSize-1]/(double)speed;
+    return ret;
+}
+
+int minSpeedOnTime(int* dist, int distSize, double hour){
+    if(distSize > ceil(hour)){
+        return -1;
+    }
+    int left = 0;
+    int right = 10000000;
+    while(left < right){
+        int mid = (left + right)/2;
+        double time = arrivalTime(dist, distSize, mid);
+        if(time < hour){
+            right = mid;
+        }else if(time > hour){
+            left = mid+1;
+        }else{
+            return mid;
+        }
+    }
+    return left;
+}
